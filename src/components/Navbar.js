@@ -46,7 +46,10 @@ function Navbar() {
       <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
     </div>
     <ul className={click ? 'nav-menu active' : 'nav-menu'}>      
-      <li className='nav-item'>
+     
+      {isAuthenticated ? (
+        <>
+           <li className='nav-item'>
         <Link
           to='/services'
           className='nav-links'
@@ -64,8 +67,6 @@ function Navbar() {
           Products
         </Link>
       </li>
-      {isAuthenticated ? (
-        <>
           <li className='nav-item'>
             <span className='nav-links' onClick={handleLogout}>
               Cerrar sesión
@@ -82,6 +83,14 @@ function Navbar() {
           </span>
         </li>
       )}
+      {!isAuthenticated && (
+            
+            <li className='nav-item'>
+              <Link to='/sign-up' className='nav-links-mobile' onClick={closeMobileMenu}>
+                Sign Up
+              </Link>
+            </li>
+          )}
     </ul>
   </div>
 </nav>
