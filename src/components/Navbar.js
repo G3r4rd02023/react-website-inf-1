@@ -5,7 +5,7 @@ import './Navbar.css';
 import { Profile } from './Profile'; 
 
 function Navbar() {
-  const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+  const { isAuthenticated, loginWithRedirect, logout} = useAuth0();
   const [click, setClick] = useState(false);
 
   const handleLogin = () => {
@@ -15,7 +15,10 @@ function Navbar() {
   const handleLogout = () => {
     logout();
   };
-
+  
+  const handleSignUp =() =>{
+    loginWithRedirect({ screen_hint: 'signup' });
+  }
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
 
@@ -77,11 +80,13 @@ function Navbar() {
           </li>
         </>
       ) : (
-        <li className='nav-item'>
-          <span className='nav-links' onClick={handleLogin}>
-            Iniciar sesión
-          </span>
-        </li>
+        <><li className='nav-item'>
+                  <span className='nav-links' onClick={handleLogin}>
+                    Iniciar sesión
+                  </span>
+                </li><li className='nav-item'>
+                    <span className='nav-links' onClick={handleSignUp}>Sign-Up</span>
+                  </li></>   
       )}
       {!isAuthenticated && (
             
