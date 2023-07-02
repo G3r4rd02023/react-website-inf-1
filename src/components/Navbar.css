@@ -103,6 +103,11 @@
     left: 0;
     transform: translate(25%, 50%);
     }
+    .navbar-logo-img {
+        height: 20px;
+        width: 10px;
+        margin-right: 5px;
+    }
     .menu-icon {
     display: block;
     position: absolute;
