@@ -2,6 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <head>
+      <style>
+        .centered-video {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 1200px;
+          height: 900px;
+        }
+      </style>
+    </head>    
    <link rel="icon" href="%PUBLIC_URL%/Perfume.jpg"/>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
@@ -47,8 +59,8 @@
 
 <div class="contenedor"> 
 
-    <video  src="videos/WhatsApp Video 2023-06-19 at 1.36.50 AM.mp4"controls autoPlay={true} muted={true} loop={true}></video>
-    <video  src="videos/WhatsApp Video 2023-06-19 at 1.36.50 AM.mp4"controls autoPlay={true} muted={true} loop={true}></video>
+    <video class="centered-video" src="videos/WhatsApp Video 2023-06-19 at 1.36.50 AM.mp4" width="1200" height="900" controls autoPlay={true} muted={true} loop={true}></video>
+    
           
     </div>
   </div>
