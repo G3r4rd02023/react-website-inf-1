@@ -22,6 +22,12 @@ function App() {
           <div>
             <img src="/images/slide3.jpg" alt="Imagen 3" />
           </div>
+          <div>
+          <img src="/images/slide4.jpg" alt="Imagen 4"   />
+          </div>
+          <div>
+          <img src="/images/slide5.jpg" alt="Imagen 5"   />
+          </div>
         </Carousel>
         <Footer />
         <Routes>
