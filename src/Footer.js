@@ -10,10 +10,10 @@ function Footer() {
     <div className='footer-container'>
       <section className='footer-subscription'>
         <p className='footer-subscription-heading'>
-          Join the Adventure newsletter to receive our best vacation deals
+        ¡Descubre la emoción de los videojuegos en la palma de tu mano! Con Game Station, podrás sumergirte en mundos fantásticos, desafiar tus habilidades y vivir aventuras épicas dondequiera que estés.
         </p>
         <p className='footer-subscription-text'>
-          You can unsubscribe at any time.
+        ¡Registrate y prepárate para vivir la mejor experiencia!
         </p>
         <div className='input-areas'>
           <form>
@@ -66,11 +66,11 @@ function Footer() {
         <div class='social-media-wrap'>
           <div class='footer-logo'>
             <Link to='/' className='social-logo'>
-              LAZA
+              GS
               <i class='fab fa-typo3' />
             </Link>
           </div>
-          <small class='website-rights'>Lempira Que Viaja © 2023</small>
+          <small class='website-rights'>Game Station © 2023</small>
           <div class='social-icons'>
             <Link
               class='social-icon-link facebook'

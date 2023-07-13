@@ -108,6 +108,9 @@
         width: 10px;
         margin-right: 5px;
     }
+    .custom-font {
+        font-family: fantasy;
+      }
     .menu-icon {
     display: block;
     position: absolute;
