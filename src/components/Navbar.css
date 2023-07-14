@@ -145,4 +145,12 @@
     transition: 250ms;
     }
     }
+    .fixed-navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 9999;
+        /* Agrega otros estilos según tus necesidades */
+      }
         

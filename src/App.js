@@ -2,37 +2,18 @@ import React from 'react';
 import Navbar from './components/Navbar';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './App.css';
-import { Carousel } from 'react-responsive-carousel';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import Footer from './Footer';
+
+import './index.css';
+
 
 function App() {
   return (
     <>
       <Router>
-        <Navbar />
-        <Carousel autoPlay={true} interval={3000} stopOnHover={true} infiniteLoop={true}>
-          <div>
-            <img src="/images/slide1.jpg" alt="Imagen 1" />
-          </div>
-          <div>
-            <img src="/images/slide2.jpg" alt="Imagen 2" />
-          </div>
-          <div>
-            <img src="/images/slide3.jpg" alt="Imagen 3" />
-          </div>
-          <div>
-          <img src="/images/slide4.jpg" alt="Imagen 4"   />
-          </div>
-          <div>
-          <img src="/images/slide5.jpg" alt="Imagen 5"   />
-          </div>
-        </Carousel>
-        <Footer />
-        <Routes>
+        <Navbar />                                
+        <Routes>             
           <Route path="/" />
-        </Routes>
+        </Routes>       
       </Router>
     </>
   );
