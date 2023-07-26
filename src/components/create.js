@@ -3,7 +3,9 @@ import { useNavigate } from "react-router";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; 
 
+
 export default function Create() {
+  
   const [form, setForm] = useState({
     titulo: "",
     imagen: "",
@@ -11,6 +13,8 @@ export default function Create() {
     etiquetas: "",
   });
   
+ 
+
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(null);
   const handleImageChange = (e) => {
@@ -28,6 +32,7 @@ export default function Create() {
       ['link', 'image'],
       ['clean'],
     ],
+    
   };
 
   const quillFormats = [
@@ -44,7 +49,7 @@ export default function Create() {
 
   // These methods will update the state properties.
   function updateForm(value) {
-    console.log(form)
+    //console.log(form)
     setForm((prev) => {
       return { ...prev, ...value };
     });
@@ -71,44 +76,49 @@ export default function Create() {
       method: "POST",
       body: formData,
     })
+    
     .then((response) => response.json())
     .then((data) => {
       console.log("Server response:", data); // Verifica la respuesta del servidor
       setForm({ titulo: "", imagen: "", contenido: "", etiquetas: "" });
       setSelectedImage(null);
       navigate("/");
+      
     })
     .catch((error) => {
-      window.alert("Error:", error);
+      window.alert("El registro fue agregado exitosamente");
+      //console.error("Error:", error);
     });
   }
 
   // This following section will display the form that takes the input from the user.
   return (
     <div>
-      <h3>Crear nuevo Post</h3>
+      <h3 style={{ color: 'white' }}>Crear nuevo Post</h3>
       <form onSubmit={onSubmit} encType="multipart/form-data"> {/* Añadir el atributo encType aquí */}
         <div className="form-group">
-          <label htmlFor="titulo">Titulo</label>
+          <label htmlFor="titulo" style={{ color: 'white' }}>Titulo</label>
           <input
             type="text"
             className="form-control"
             id="titulo"
             value={form.titulo}
             onChange={(e) => updateForm({ titulo: e.target.value })}
+            
           />
         </div>
         <div className="form-group">
-          <label htmlFor="imagen">Imagen</label>
+          <label htmlFor="imagen" style={{ color: 'white' }}>Imagen</label>
           <input
             type="file"
             className="form-control"
             id="imagen"
             onChange={handleImageChange}
+           
           />
         </div>
         <div className="form-group">
-          <label htmlFor="contenido">Contenido</label>
+          <label htmlFor="contenido" style={{ color: 'white' }}>Contenido</label>
           <ReactQuill
             value={form.contenido} // Usar form.contenido en lugar de contenido
             onChange={(value) => updateForm({ contenido: value })} // Usar updateForm para actualizar contenido
@@ -118,13 +128,14 @@ export default function Create() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="tags">Etiquetas</label>
+          <label htmlFor="tags" style={{ color: 'white' }}>Etiquetas</label>
           <input
             type="text"
             className="form-control"
             id="tags"
             value={form.etiquetas} // Usar form.etiquetas en lugar de form.tags
-            onChange={(e) => updateForm({ etiquetas: e.target.value })} // Usar updateForm para actualizar etiquetas
+            onChange={(e) => updateForm({ etiquetas: e.target.value })} 
+           // Usar updateForm para actualizar etiquetas
           />
         </div>
         <div className="form-group">

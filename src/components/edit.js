@@ -94,10 +94,10 @@ export default function Edit() {
  // This following section will display the form that takes input from the user to update the data.
  return (
    <div>
-     <h3>Actualizar Post</h3>
+     <h3 style={{ color: 'white' }}>Actualizar Post</h3>
      <form onSubmit={onSubmit}>
        <div className="form-group">
-         <label htmlFor="titulo">Titulo: </label>
+         <label htmlFor="titulo" style={{ color: 'white' }}>Titulo: </label>
          <input
            type="text"
            className="form-control"
@@ -107,7 +107,7 @@ export default function Edit() {
          />
        </div>
        <div className="form-group">
-         <label htmlFor="image">Imagen: </label>
+         <label htmlFor="image" style={{ color: 'white' }}>Imagen: </label>
          <input
            type="text"
            className="form-control"
@@ -117,7 +117,7 @@ export default function Edit() {
          />      
        </div>
        <div className="form-group">
-          <label htmlFor="contenido">Contenido</label>
+          <label htmlFor="contenido" style={{ color: 'white' }}>Contenido</label>
           <ReactQuill
             value={form.contenido} // Usar form.contenido en lugar de contenido
             onChange={(value) => updateForm({ contenido: value })} // Usar updateForm para actualizar contenido
@@ -126,7 +126,7 @@ export default function Edit() {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="tags">Etiquetas</label>
+          <label htmlFor="tags" style={{ color: 'white' }}>Etiquetas</label>
           <input
             type="text"
             className="form-control"
