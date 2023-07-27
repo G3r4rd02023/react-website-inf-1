@@ -76,19 +76,31 @@ export default function Create() {
       method: "POST",
       body: formData,
     })
+      .then(async (response) => {
+        if (response.ok) {
+          // Si la respuesta del servidor es exitosa, se devuelve la respuesta
+          return response.json();
+        } else {
+          // Si la respuesta del servidor no es exitosa, se lanza un error con el mensaje del servidor
+          const text = await response.text();
+          throw new Error(text);
+        }
+      })
+      .then((data) => {
+        // Aquí manejas la respuesta si es un JSON válido
+        console.log("Server response:", data);
+        setForm({ titulo: "", imagen: "", contenido: "", etiquetas: "" });
+        setSelectedImage(null);
+        console.log("Creado exitosamente");
+        window.alert("Registro Creado exitosamente");
+        navigate("/");
+      })
+      .catch((error) => {
+        // Aquí manejas el error si la respuesta no es exitosa o no es un JSON válido
+        window.alert("Hubo un error al agregar el registro");
+        console.error("Error:", error);
+      });
     
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("Server response:", data); // Verifica la respuesta del servidor
-      setForm({ titulo: "", imagen: "", contenido: "", etiquetas: "" });
-      setSelectedImage(null);
-      navigate("/");
-      
-    })
-    .catch((error) => {
-      window.alert("El registro fue agregado exitosamente");
-      //console.error("Error:", error);
-    });
   }
 
   // This following section will display the form that takes the input from the user.

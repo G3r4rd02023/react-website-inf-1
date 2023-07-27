@@ -74,7 +74,7 @@ app.post("/upload", upload.single("imagen"), async (req, res) => {
 
     await insertDocumentIntoDB(newDocument); // Llama a la función async para insertar datos en la base de datos
 
-    res.sendStatus(200);
+    res.json({ message: "OK" }); 
   } catch (error) {
     console.error("Error al procesar la solicitud:", error);
     res.status(500).send("Error al procesar la solicitud.");

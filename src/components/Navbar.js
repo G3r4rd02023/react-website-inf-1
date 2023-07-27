@@ -3,7 +3,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Link } from 'react-router-dom';
 import './Navbar.css';
 import { Profile } from './Profile'; 
-import logoImg from './perfume.png';
+/* import logoImg from './black.png'; */
 
 function Navbar() {
   const { isAuthenticated, loginWithRedirect, logout} = useAuth0();
@@ -43,7 +43,7 @@ function Navbar() {
       <nav className='fixed-navbar'>
   <div className='navbar-container'>
   <Link to='/' className='navbar-logo custom font' onClick={closeMobileMenu}>
-  <img src={logoImg} alt="Logo" style={{ width: '30px', height: '30px' }} className="navbar-logo-img" />
+  {/* <img src={logoImg} alt="Logo" style={{ width: '30px', height: '30px' }} className="navbar-logo-img" /> */}
     Lovely Perfumes
   <i className='fab fa-typo3' />
   </Link>
