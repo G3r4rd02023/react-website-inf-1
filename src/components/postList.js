@@ -74,13 +74,22 @@ export default function PostList() {
 
   // This method will delete a record
   async function deleteRecord(id) {
-    await fetch(`http://localhost:5050/post/${id}`, {
-      method: "DELETE",
-    });
-
-    const newPosts = posts.filter((el) => el._id !== id);
-    setPosts(newPosts);
+    // Mostrar el cuadro de diálogo de confirmación
+    const confirmed = window.confirm("¿Estás seguro de que deseas eliminar este registro?");
+  
+    // Si el usuario ha confirmado, proceder con la eliminación
+    if (confirmed) {
+      // Realizar la solicitud DELETE al servidor
+      await fetch(`http://localhost:5050/post/${id}`, {
+        method: "DELETE",
+      });
+  
+      // Actualizar el estado local de los posts filtrando el elemento con el ID coincidente
+      const newPosts = posts.filter((el) => el._id !== id);
+      setPosts(newPosts);
+    }
   }
+  
 
   // This method will map out the records on the table
   function postList() {
