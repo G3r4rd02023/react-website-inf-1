@@ -66,11 +66,18 @@ app.post("/upload", upload.single("imagen"), async (req, res) => {
 
   try {
     const newDocument = {
-      titulo: req.body.titulo,
-      imagen: req.file.filename, // Guarda el nombre del archivo en lugar de la imagen completa
+      titulo: req.body.titulo,     
       contenido: req.body.contenido,
       etiquetas: req.body.etiquetas,
     };
+
+    if (req.file) {
+      // Si se envía una nueva imagen, actualizar el campo de imagen solo si se ha subido una nueva imagen
+      newDocument.imagen = req.file.filename;
+    } else {
+      // Si no se envía una imagen, establecer el campo de imagen como nulo
+      newDocument.imagen = null;
+    }
 
     await insertDocumentIntoDB(newDocument); // Llama a la función async para insertar datos en la base de datos
 

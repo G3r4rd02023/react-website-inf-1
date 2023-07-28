@@ -68,6 +68,8 @@ export default function Create() {
    
     if (selectedImage) {
       formData.append("imagen", selectedImage);
+    } else {
+      formData.append("imagen", ""); // Agrega una cadena vacía para indicar que el campo de imagen es nulo
     }
 
     const url = "http://localhost:5050/upload"; 
