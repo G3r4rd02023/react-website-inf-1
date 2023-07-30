@@ -9,6 +9,8 @@ export default function Edit() {
    imagen: "",
    contenido: "",
    etiquetas: "",
+   estado: "",
+   autor: "",
    posts: [],
  });
  const params = useParams();
@@ -77,6 +79,8 @@ export default function Edit() {
      imagen: form.imagen,
      contenido: form.contenido,
      etiquetas: form.etiquetas,
+     estado: form.estado,
+     autor: form.autor,
    };
  
    // This will send a post request to update the data in the database.
@@ -88,7 +92,7 @@ export default function Edit() {
      },
    });
  
-   navigate("/");
+   navigate("/postList");
  }
  
  // This following section will display the form that takes input from the user to update the data.
@@ -133,6 +137,28 @@ export default function Edit() {
             id="tags"
             value={form.etiquetas} // Usar form.etiquetas en lugar de form.tags
             onChange={(e) => updateForm({ etiquetas: e.target.value })} // Usar updateForm para actualizar etiquetas
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="estado" style={{ color: 'white' }}>Estado</label>
+          <input
+            type="text"
+            className="form-control"
+            id="estado"
+            value={form.estado} 
+            onChange={(e) => updateForm({ estado: e.target.value })} 
+            readOnly
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="autor" style={{ color: 'white' }}>Autor</label>
+          <input
+            type="text"
+            className="form-control"
+            id="autor"
+            value={form.autor} 
+            onChange={(e) => updateForm({ autor: e.target.value })} 
+            readOnly
           />
         </div>
        <br />

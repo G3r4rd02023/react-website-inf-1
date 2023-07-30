@@ -69,6 +69,8 @@ app.post("/upload", upload.single("imagen"), async (req, res) => {
       titulo: req.body.titulo,     
       contenido: req.body.contenido,
       etiquetas: req.body.etiquetas,
+      estado: req.body.estado,
+      autor: req.body.autor
     };
 
     if (req.file) {

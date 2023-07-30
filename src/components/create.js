@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; 
+import { useAuth0 } from '@auth0/auth0-react';
 
 
 export default function Create() {
@@ -11,10 +12,12 @@ export default function Create() {
     imagen: "",
     contenido: "",
     etiquetas: "",
+    estado:"borrador",
+    autor:"",
   });
   
- 
-
+  
+  const { isAuthenticated, user } = useAuth0(); 
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(null);
   const handleImageChange = (e) => {
@@ -47,6 +50,16 @@ export default function Create() {
     'image',
   ];
 
+  // Establecer el nombre del usuario en el campo "autor"
+  useState(() => {
+    if (isAuthenticated && user) {
+      setForm((prevForm) => ({
+        ...prevForm,
+        autor: user.name, // Usamos el nombre del usuario autenticado
+      }));
+    }
+  }, [isAuthenticated, user]);
+
   // These methods will update the state properties.
   function updateForm(value) {
     //console.log(form)
@@ -60,11 +73,14 @@ export default function Create() {
     console.log("Formulario enviado")
     e.preventDefault();
 
+    
     // When a post request is sent to the create url, we'll add a new record to the database.
     const formData = new FormData();
     formData.append("titulo", form.titulo);
     formData.append("contenido", form.contenido);
     formData.append("etiquetas", form.etiquetas);
+    formData.append("estado",form.estado);
+    formData.append("autor",form.autor);
    
     if (selectedImage) {
       formData.append("imagen", selectedImage);
@@ -91,11 +107,11 @@ export default function Create() {
       .then((data) => {
         // Aquí manejas la respuesta si es un JSON válido
         console.log("Server response:", data);
-        setForm({ titulo: "", imagen: "", contenido: "", etiquetas: "" });
+        setForm({ titulo: "", imagen: "", contenido: "", etiquetas: "", estado: "", autor: "" });
         setSelectedImage(null);
         console.log("Creado exitosamente");
         window.alert("Registro Creado exitosamente");
-        navigate("/");
+        navigate("/postList");
       })
       .catch((error) => {
         // Aquí manejas el error si la respuesta no es exitosa o no es un JSON válido
@@ -152,6 +168,7 @@ export default function Create() {
            // Usar updateForm para actualizar etiquetas
           />
         </div>
+        
         <div className="form-group">
           <input
             type="submit"

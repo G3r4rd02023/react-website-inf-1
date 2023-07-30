@@ -17,6 +17,30 @@ const Post = (props) => {
     setPlainTextContent(plainText);
   }, [props.post.contenido]);
 
+  // Función para cambiar el estado del blog a "publicado"
+  async function publicarPost() {
+    const { titulo, imagen, contenido, etiquetas, autor } = props.post;
+    // Realizar la solicitud PUT al servidor para actualizar el estado a "publicado"
+    await fetch(`http://localhost:5050/post/${props.post._id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        estado: "publicado",
+        titulo,
+        imagen,
+        contenido,
+        etiquetas,
+        autor,
+      }),
+    });
+
+    // Actualizar el estado local del post para reflejar el cambio
+    const updatedPost = { ...props.post, estado: "publicado" };
+    props.updatePost(updatedPost);
+  }
+
   return (
     <tr>
       <td>{props.post.titulo}</td>
@@ -31,6 +55,8 @@ const Post = (props) => {
       </td>
       <td>{plainTextContent}</td>
       <td>{props.post.etiquetas}</td>
+      <td>{props.post.estado}</td>
+      <td>{props.post.autor}</td>
       <td>
         <Link className="btn btn-link" to={`/edit/${props.post._id}`}  style={{ color: "white" }}>
           Editar
@@ -43,7 +69,10 @@ const Post = (props) => {
           }}
         >
           Eliminar
-        </button>       
+        </button> 
+        <button className="btn btn-link" onClick={publicarPost} style={{ color: "white" }}>
+          Publicar
+        </button>      
       </td>
     </tr>
   );
@@ -90,6 +119,13 @@ export default function PostList() {
     }
   }
   
+  async function updatePost(updatedPost) {
+    // Actualizar el estado local de los posts
+    const updatedPosts = posts.map((post) =>
+      post._id === updatedPost._id ? updatedPost : post
+    );
+    setPosts(updatedPosts);
+  }
 
   // This method will map out the records on the table
   function postList() {
@@ -98,6 +134,7 @@ export default function PostList() {
         <Post
           post={post}
           deleteRecord={() => deleteRecord(post._id)}
+          updatePost={updatePost} 
           key={post._id}
         />
       );
@@ -115,6 +152,8 @@ export default function PostList() {
             <th style={{ color: "white" }}>Imagen</th>
             <th style={{ color: "white" }}>Contenido</th>
             <th style={{ color: "white" }}>Etiquetas</th>
+            <th style={{ color: "white" }}>Estado</th>
+            <th style={{ color: "white" }}>Autor</th>
           </tr>
         </thead>
         <tbody>{postList()}</tbody>

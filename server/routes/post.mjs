@@ -30,6 +30,8 @@ router.post("/", async (req, res) => {
     imagen: req.body.imagen, // Asegúrate de obtener el buffer de la imagen desde el cliente y pasarlo aquí.
     contenido: req.body.contenido,
     etiquetas: req.body.etiquetas,
+    estado: req.body.estado,
+    autor: req.body.autor
   };
   const collection = await db.collection("posts");
   const result = await collection.insertOne(newDocument);
@@ -52,6 +54,8 @@ router.patch("/:id", async (req, res) => {
       imagen: req.body.imagen, // Asegúrate de obtener el buffer de la imagen desde el cliente y pasarlo aquí.
       contenido: req.body.contenido,
       etiquetas: req.body.etiquetas,
+      estado: req.body.estado,
+      autor: req.body.autor
     },
   };
 
