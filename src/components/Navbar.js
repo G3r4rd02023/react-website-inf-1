@@ -53,14 +53,13 @@ function Navbar() {
     <ul className={click ? 'nav-menu active' : 'nav-menu'}>      
      
       {isAuthenticated ? (
-        <>
-           <li className='nav-item'>
+        <>         
+      <li className='nav-item'>
         <Link
-          to='/create'
+          to="/myPost"
           className='nav-links'
-          onClick={closeMobileMenu}
-        >
-          Create Post
+          onClick={closeMobileMenu}>        
+          Mis Posts
         </Link>
       </li>
       <li className='nav-item'>

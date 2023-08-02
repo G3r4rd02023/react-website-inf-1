@@ -1,10 +1,12 @@
 import React from 'react';
+
 import Navbar from './components/Navbar';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import PostList from "./components/postList";
 import Edit from "./components/edit";
 import Create from "./components/create";
+import MyPost from "./components/myPost";
 
 
 import './index.css';
@@ -24,6 +26,7 @@ function App() {
             <Route path="/postList" element={<PostList />} />
             <Route path="/edit/:id" element={<Edit />} />            
             <Route path="/create" element={<Create />} /> 
+            <Route path="/myPost" element={<MyPost />} /> 
           </Routes>
         </div>
       </div>

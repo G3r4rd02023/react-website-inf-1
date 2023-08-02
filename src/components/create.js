@@ -50,6 +50,39 @@ export default function Create() {
     'image',
   ];
 
+  // Método para validar los campos del formulario
+  function validateForm() {
+    const errors = {};
+
+
+    if (Object.keys(errors).length > 0) {
+      setError(errors);
+      return;
+    }
+    if (!form.imagen.trim) {
+      errors.imagen = "Debes seleccionar una imagen";
+    }
+  
+    if (!form.titulo.trim()) {
+      errors.titulo = "El título es obligatorio";
+    }else if (form.titulo.length < 5 || form.titulo.length > 100) {
+      errors.titulo = "El titulo debe tener entre 5 y 100 caracteres";
+    }
+
+
+    if (!form.contenido.trim()) {
+      errors.contenido = "El contenido es obligatorio";
+    }
+
+    if (!form.etiquetas.trim()) {
+      errors.etiquetas = "Las etiquetas son obligatorias";
+    }
+
+      // Agrega aquí otras validaciones para los campos que necesites
+
+      return errors;
+    }
+
   // Establecer el nombre del usuario en el campo "autor"
   useState(() => {
     if (isAuthenticated && user) {
@@ -72,7 +105,12 @@ export default function Create() {
   async function onSubmit(e) {
     console.log("Formulario enviado")
     e.preventDefault();
-
+  // Validar el formulario antes de enviarlo
+  const errors = validateForm();
+  if (Object.keys(errors).length > 0) {
+    setError(errors);
+    return;
+  }
     
     // When a post request is sent to the create url, we'll add a new record to the database.
     const formData = new FormData();
@@ -111,7 +149,7 @@ export default function Create() {
         setSelectedImage(null);
         console.log("Creado exitosamente");
         window.alert("Registro Creado exitosamente");
-        navigate("/postList");
+        navigate("/myPost");
       })
       .catch((error) => {
         // Aquí manejas el error si la respuesta no es exitosa o no es un JSON válido
@@ -121,6 +159,9 @@ export default function Create() {
     
   }
 
+  
+
+  const [error, setError] = useState({}); // Estado para controlar los mensajes de error
   // This following section will display the form that takes the input from the user.
   return (
     <div>
@@ -133,9 +174,13 @@ export default function Create() {
             className="form-control"
             id="titulo"
             value={form.titulo}
-            onChange={(e) => updateForm({ titulo: e.target.value })}
+            onChange={(e) => {
+              updateForm({ titulo: e.target.value });
+              setError((prevError) => ({ ...prevError, titulo: "" }));
+            }}
             
           />
+            {error.titulo && <div style={{ color: "red" }}>{error.titulo}</div>}
         </div>
         <div className="form-group">
           <label htmlFor="imagen" style={{ color: 'white' }}>Imagen</label>
@@ -151,10 +196,16 @@ export default function Create() {
           <label htmlFor="contenido" style={{ color: 'white' }}>Contenido</label>
           <ReactQuill
             value={form.contenido} // Usar form.contenido en lugar de contenido
-            onChange={(value) => updateForm({ contenido: value })} // Usar updateForm para actualizar contenido
+            onChange={(value) => {
+              updateForm({ contenido: value });
+              setError((prevError) => ({ ...prevError, contenido: "" }));
+            }} // Usar updateForm para actualizar contenido
             modules={quillModules}
             formats={quillFormats}
           />
+           {error.contenido && (
+            <div style={{ color: "red" }}>{error.contenido}</div>
+          )}
         </div>
 
         <div className="form-group">
@@ -164,9 +215,15 @@ export default function Create() {
             className="form-control"
             id="tags"
             value={form.etiquetas} // Usar form.etiquetas en lugar de form.tags
-            onChange={(e) => updateForm({ etiquetas: e.target.value })} 
+            onChange={(e) => {
+              updateForm({ etiquetas: e.target.value });
+              setError((prevError) => ({ ...prevError, etiquetas: "" }));
+            }}
            // Usar updateForm para actualizar etiquetas
           />
+           {error.etiquetas && (
+            <div style={{ color: "red" }}>{error.etiquetas}</div>
+          )}
         </div>
         
         <div className="form-group">

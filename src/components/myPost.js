@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
-import {useNavigate } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react"; // Importa la librería de Auth0
+import { Link, useNavigate } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Post = (props) => {
   const [plainTextContent, setPlainTextContent] = useState("");
-
+ 
+  
+ 
   // Función para obtener el texto sin formato de HTML
   const getPlainText = (html) => {
     const tempDiv = document.createElement("div");
@@ -17,7 +21,29 @@ const Post = (props) => {
     setPlainTextContent(plainText);
   }, [props.post.contenido]);
 
-  
+  // Función para cambiar el estado del blog a "publicado"
+  async function publicarPost() {
+    const { titulo, imagen, contenido, etiquetas, autor } = props.post;
+    // Realizar la solicitud PUT al servidor para actualizar el estado a "publicado"
+    await fetch(`http://localhost:5050/post/${props.post._id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        estado: "publicado",
+        titulo,
+        imagen,
+        contenido,
+        etiquetas,
+        autor,
+      }),
+    });
+
+    // Actualizar el estado local del post para reflejar el cambio
+    const updatedPost = { ...props.post, estado: "publicado" };
+    props.updatePost(updatedPost);
+  }
 
   return (
     <tr>
@@ -35,7 +61,22 @@ const Post = (props) => {
       <td>{props.post.etiquetas}</td>
       <td>{props.post.estado}</td>
       <td>{props.post.autor}</td>
-      <td>                           
+      <td>
+        <Link className="btn btn-outline-warning" to={`/edit/${props.post._id}`}  style={{ color: "black" }}>
+          Editar
+        </Link>{" "}
+        
+        <button
+          className="btn btn-outline-danger"  style={{ color: "black" }}
+          onClick={() => {
+            props.deleteRecord(props.post._id);
+          }}
+        >
+          Eliminar
+        </button> 
+        <button className="btn btn-outline-success" onClick={publicarPost} style={{ color: "black" }}>
+          Publicar
+        </button>      
       </td>
     </tr>
   );
@@ -44,6 +85,7 @@ const Post = (props) => {
 export default function PostList() {
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate(); 
+  const { user } = useAuth0(); // Obtiene la información del usuario autenticado desde Auth0
 
   // This method fetches the records from the database.
   useEffect(() => {
@@ -97,12 +139,13 @@ export default function PostList() {
     navigate("/create");
   };
 
+  // Filtrar los registros por el autor actualmente autenticado (user.sub)
+  const filteredPosts = posts.filter((post) => post.autor === user?.name);
+  console.log(user?.name)
+
   // This method will map out the records on the table
   function postList() {
-    // Filtra los posts que tengan el estado "publicado"
-    const publicadoPosts = posts.filter((post) => post.estado === "publicado");
-
-    return publicadoPosts.map((post) => {
+    return filteredPosts.map((post) => {    
       return (
         <Post
           post={post}
@@ -110,14 +153,14 @@ export default function PostList() {
           updatePost={updatePost} 
           key={post._id}
         />
-      );
+      );   
     });
   }
 
   // This following section will display the table with the records of individuals.
   return (
     <div>
-      <h3 style={{ color: 'white' }}>Blog</h3>
+      <h3 style={{ color: 'white' }}>Mis Publicaciones</h3>
       <button className="btn btn-outline-primary" style={{ color: "white", marginBottom: "10px" }} onClick={crearNuevoPost}>
         Crear Post
       </button>
