@@ -1,13 +1,55 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react"; // Importa la librería de Auth0
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import DataTable from 'react-data-table-component';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faTrashAlt, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import TextField from '@mui/material/TextField';
 
-const Post = (props) => {
-  const [plainTextContent, setPlainTextContent] = useState("");
- 
+
+export default function PostList() {
+  const [posts, setPosts] = useState([]);
+  const navigate = useNavigate(); 
+  const { user } = useAuth0(); // Obtiene la información del usuario autenticado desde Auth0
+   // Agregar el estado para almacenar el texto de búsqueda
+  const [filterText, setFilterText] = useState("");
+
+  // Función para actualizar el texto de búsqueda
+  const handleFilter = (e) => {
+    setFilterText(e.target.value);
+  };
+
   
- 
+
+  async function publicarPost(id) {
+    // Obtén el post correspondiente al ID
+    const post = posts.find((post) => post._id === id);
+    if (!post) {
+      console.error("No se encontró el post para publicar.");
+      return;
+    }
+
+    // Realizar la solicitud PUT al servidor para actualizar el estado a "publicado"
+    await fetch(`http://localhost:5050/post/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        estado: "publicado",
+        titulo: post.titulo,
+        imagen: post.imagen,
+        contenido: post.contenido,
+        etiquetas: post.etiquetas,
+        autor: post.autor,
+      }),
+    });
+
+    // Actualizar el estado local del post para reflejar el cambio
+    const updatedPost = { ...post, estado: "publicado" };
+    updatePost(updatedPost);
+  }
   // Función para obtener el texto sin formato de HTML
   const getPlainText = (html) => {
     const tempDiv = document.createElement("div");
@@ -15,78 +57,89 @@ const Post = (props) => {
     return tempDiv.textContent || tempDiv.innerText || "";
   };
 
-  useEffect(() => {
-    // Obtener el texto sin formato cuando cambie el contenido HTML
-    const plainText = getPlainText(props.post.contenido);
-    setPlainTextContent(plainText);
-  }, [props.post.contenido]);
+  const editarPost = (id) => {
+    navigate(`/edit/${id}`);
+  };
 
-  // Función para cambiar el estado del blog a "publicado"
-  async function publicarPost() {
-    const { titulo, imagen, contenido, etiquetas, autor } = props.post;
-    // Realizar la solicitud PUT al servidor para actualizar el estado a "publicado"
-    await fetch(`http://localhost:5050/post/${props.post._id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        estado: "publicado",
-        titulo,
-        imagen,
-        contenido,
-        etiquetas,
-        autor,
-      }),
+  // Esta función manejará la acción de eliminar un post
+const eliminarPost = async (id) => {
+  // Mostrar el cuadro de diálogo de confirmación
+  const confirmed = window.confirm("¿Estás seguro de que deseas eliminar este registro?");
+
+  // Si el usuario ha confirmado, proceder con la eliminación
+  if (confirmed) {
+    // Realizar la solicitud DELETE al servidor
+    await fetch(`http://localhost:5050/post/${id}`, {
+      method: "DELETE",
     });
 
-    // Actualizar el estado local del post para reflejar el cambio
-    const updatedPost = { ...props.post, estado: "publicado" };
-    props.updatePost(updatedPost);
+    // Actualizar el estado local de los posts filtrando el elemento con el ID coincidente
+    const newPosts = posts.filter((el) => el._id !== id);
+    setPosts(newPosts);
   }
-
-  return (
-    <tr>
-      <td>{props.post.titulo}</td>
-      <td>
-        {props.post.imagen && (
-          <img
-            src={`http://localhost:5050/uploads/${props.post.imagen}`}
-            alt={props.post.titulo}
-            style={{ maxWidth: "100px" }} // Ajusta el estilo según tus necesidades
-          />
-        )}
-      </td>
-      <td>{plainTextContent}</td>
-      <td>{props.post.etiquetas}</td>
-      <td>{props.post.estado}</td>
-      <td>{props.post.autor}</td>
-      <td>
-        <Link className="btn btn-outline-warning" to={`/edit/${props.post._id}`}  style={{ color: "black" }}>
-          Editar
-        </Link>{" "}
-        
-        <button
-          className="btn btn-outline-danger"  style={{ color: "black" }}
-          onClick={() => {
-            props.deleteRecord(props.post._id);
-          }}
-        >
-          Eliminar
-        </button> 
-        <button className="btn btn-outline-success" onClick={publicarPost} style={{ color: "black" }}>
-          Publicar
-        </button>      
-      </td>
-    </tr>
-  );
 };
 
-export default function PostList() {
-  const [posts, setPosts] = useState([]);
-  const navigate = useNavigate(); 
-  const { user } = useAuth0(); // Obtiene la información del usuario autenticado desde Auth0
-
+  const columns = [
+    {
+      name: "Titulo",
+      selector: "titulo",
+      sortable: true,
+    },
+    {
+      name: "Imagen",
+      cell: (row) => <img src={`http://localhost:5050/uploads/${row.imagen}`} alt={row.titulo} style={{ maxWidth: "100px" }} />,
+    },
+    {
+      name: "Contenido",
+      selector: "contenido",
+      cell: (row) => getPlainText(row.contenido),
+    },
+    {
+      name: "Etiquetas",
+      selector: "etiquetas",
+      sortable: true,
+    },
+    {
+      name: "Estado",
+      selector: "estado",
+      sortable: true,
+    },
+    {
+      name: "Autor",
+      selector: "autor",
+      sortable: true,
+    },
+    {
+      name: "Acciones",
+    cell: (row) => (
+      <>
+        <button
+          className="btn btn-outline-warning"
+          onClick={() => editarPost(row._id)}
+          style={{ color: "black", marginRight: "5px" }}
+        >
+        <FontAwesomeIcon icon={faEdit} />
+        </button>
+        <button
+          className="btn btn-outline-danger"
+          onClick={() => eliminarPost(row._id)}
+          style={{ color: "black", marginRight: "5px" }}
+        >
+        <FontAwesomeIcon icon={faTrashAlt} />
+        </button>
+        <button
+          className="btn btn-outline-success"
+          onClick={() => publicarPost(row._id)}
+          style={{ color: "black" }}
+        >
+        <FontAwesomeIcon icon={faCheckCircle} />
+        </button> 
+      </>
+    ),
+    }
+    
+  ];
+  
   // This method fetches the records from the database.
   useEffect(() => {
     async function getPosts() {
@@ -107,23 +160,6 @@ export default function PostList() {
     return;
   }, [posts.length]);
 
-  // This method will delete a record
-  async function deleteRecord(id) {
-    // Mostrar el cuadro de diálogo de confirmación
-    const confirmed = window.confirm("¿Estás seguro de que deseas eliminar este registro?");
-  
-    // Si el usuario ha confirmado, proceder con la eliminación
-    if (confirmed) {
-      // Realizar la solicitud DELETE al servidor
-      await fetch(`http://localhost:5050/post/${id}`, {
-        method: "DELETE",
-      });
-  
-      // Actualizar el estado local de los posts filtrando el elemento con el ID coincidente
-      const newPosts = posts.filter((el) => el._id !== id);
-      setPosts(newPosts);
-    }
-  }
   
   async function updatePost(updatedPost) {
     // Actualizar el estado local de los posts
@@ -139,24 +175,11 @@ export default function PostList() {
     navigate("/create");
   };
 
-  // Filtrar los registros por el autor actualmente autenticado (user.sub)
-  const filteredPosts = posts.filter((post) => post.autor === user?.name);
-  console.log(user?.name)
-
-  // This method will map out the records on the table
-  function postList() {
-    return filteredPosts.map((post) => {    
-      return (
-        <Post
-          post={post}
-          deleteRecord={() => deleteRecord(post._id)}
-          updatePost={updatePost} 
-          key={post._id}
-        />
-      );   
-    });
-  }
-
+  // Aplicar el filtro de búsqueda a los datos
+  const filteredPosts = posts.filter((post) => {
+    return post.autor === user?.name && post.titulo.toLowerCase().includes(filterText.toLowerCase());
+  });
+ 
   // This following section will display the table with the records of individuals.
   return (
     <div>
@@ -164,20 +187,31 @@ export default function PostList() {
       <button className="btn btn-outline-primary" style={{ color: "white", marginBottom: "10px" }} onClick={crearNuevoPost}>
         Crear Post
       </button>
-      <table className="table table-striped" style={{ marginTop: 20 }}>
-        <thead>
-          <tr>
-            <th style={{ color: "black" }}>Titulo</th>
-            <th style={{ color: "black" }}>Imagen</th>
-            <th style={{ color: "black" }}>Contenido</th>
-            <th style={{ color: "black" }}>Etiquetas</th>
-            <th style={{ color: "black" }}>Estado</th>
-            <th style={{ color: "black" }}>Autor</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>{postList()}</tbody>
-      </table>
+      <TextField
+        id="filter-input"
+        label="Buscar"
+        variant="outlined"
+        size="small"
+        value={filterText}
+        onChange={handleFilter}
+        style={{ marginBottom: "10px" , color: "white"}}
+      />
+      <DataTable
+        columns={columns}
+        data={filteredPosts}
+        pagination // Activa la paginación
+        striped // Alterna el fondo de las filas para mejorar la legibilidad
+        highlightOnHover // Resalta la fila cuando el usuario coloca el cursor sobre ella
+        pointerOnHover // Cambia el cursor cuando el usuario coloca el cursor sobre una fila
+        defaultSortField="titulo" // Campo predeterminado para ordenar
+        defaultSortAsc={true} // Orden ascendente por defecto
+        paginationPerPage={10} // Cantidad de elementos por página
+        noHeader // Oculta el encabezado de la tabla
+        noDataComponent="No hay datos disponibles" // Mensaje cuando no hay datos
+        responsive // Hace que la tabla sea responsive
+        searchable
+      />
+      
     </div>
   );
 }
