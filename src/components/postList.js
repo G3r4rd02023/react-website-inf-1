@@ -1,9 +1,27 @@
 import React, { useEffect, useState } from "react";
-import {useNavigate } from "react-router-dom";
 
-const Post = (props) => {
-  const [plainTextContent, setPlainTextContent] = useState("");
+import { useNavigate } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import DataTable from 'react-data-table-component';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye} from "@fortawesome/free-solid-svg-icons";
+import TextField from '@mui/material/TextField';
 
+
+export default function PostList() {
+  const [posts, setPosts] = useState([]);
+  const navigate = useNavigate(); 
+ 
+  const [filterText, setFilterText] = useState("");
+
+  // Función para actualizar el texto de búsqueda
+  const handleFilter = (e) => {
+    setFilterText(e.target.value);
+  };
+
+  
+
+  
   // Función para obtener el texto sin formato de HTML
   const getPlainText = (html) => {
     const tempDiv = document.createElement("div");
@@ -11,40 +29,60 @@ const Post = (props) => {
     return tempDiv.textContent || tempDiv.innerText || "";
   };
 
-  useEffect(() => {
-    // Obtener el texto sin formato cuando cambie el contenido HTML
-    const plainText = getPlainText(props.post.contenido);
-    setPlainTextContent(plainText);
-  }, [props.post.contenido]);
+  const verPost = (id) => {
+    navigate(`/details/${id}`);
+  };
 
   
 
-  return (
-    <tr>
-      <td>{props.post.titulo}</td>
-      <td>
-        {props.post.imagen && (
-          <img
-            src={`http://localhost:5050/uploads/${props.post.imagen}`}
-            alt={props.post.titulo}
-            style={{ maxWidth: "100px" }} // Ajusta el estilo según tus necesidades
-          />
-        )}
-      </td>
-      <td>{plainTextContent}</td>
-      <td>{props.post.etiquetas}</td>
-      <td>{props.post.estado}</td>
-      <td>{props.post.autor}</td>
-      <td>                           
-      </td>
-    </tr>
-  );
-};
-
-export default function PostList() {
-  const [posts, setPosts] = useState([]);
-  const navigate = useNavigate(); 
-
+  const columns = [
+    {
+      name: "Titulo",
+      selector: "titulo",
+      sortable: true,
+    },
+    {
+      name: "Imagen",
+      cell: (row) => <img src={`http://localhost:5050/uploads/${row.imagen}`} alt={row.titulo} style={{ maxWidth: "100px" }} />,
+    },
+    {
+      name: "Contenido",
+      selector: "contenido",
+      cell: (row) => getPlainText(row.contenido),
+    },
+    {
+      name: "Etiquetas",
+      selector: "etiquetas",
+      sortable: true,
+    },
+    {
+      name: "Estado",
+      selector: "estado",
+      sortable: true,
+    },
+    {
+      name: "Autor",
+      selector: "autor",
+      sortable: true,
+    },
+    {
+      name: "Acciones",
+    cell: (row) => (
+      <>
+        <button
+          className="btn btn-outline-warning"
+          onClick={() => verPost(row._id)}
+          style={{ color: "black", marginRight: "5px" }}
+        >
+        <FontAwesomeIcon icon={faEye} />
+        </button>
+        
+      </>
+    ),
+    }
+    
+  ];
+  
   // This method fetches the records from the database.
   useEffect(() => {
     async function getPosts() {
@@ -65,31 +103,8 @@ export default function PostList() {
     return;
   }, [posts.length]);
 
-  // This method will delete a record
-  async function deleteRecord(id) {
-    // Mostrar el cuadro de diálogo de confirmación
-    const confirmed = window.confirm("¿Estás seguro de que deseas eliminar este registro?");
   
-    // Si el usuario ha confirmado, proceder con la eliminación
-    if (confirmed) {
-      // Realizar la solicitud DELETE al servidor
-      await fetch(`http://localhost:5050/post/${id}`, {
-        method: "DELETE",
-      });
-  
-      // Actualizar el estado local de los posts filtrando el elemento con el ID coincidente
-      const newPosts = posts.filter((el) => el._id !== id);
-      setPosts(newPosts);
-    }
-  }
-  
-  async function updatePost(updatedPost) {
-    // Actualizar el estado local de los posts
-    const updatedPosts = posts.map((post) =>
-      post._id === updatedPost._id ? updatedPost : post
-    );
-    setPosts(updatedPosts);
-  }
+ 
 
   const crearNuevoPost = () => {
     // Agregar aquí la lógica para abrir un formulario de creación de blog o cualquier otra acción deseada
@@ -97,44 +112,42 @@ export default function PostList() {
     navigate("/create");
   };
 
-  // This method will map out the records on the table
-  function postList() {
-    // Filtra los posts que tengan el estado "publicado"
-    const publicadoPosts = posts.filter((post) => post.estado === "publicado");
+  // Aplicar el filtro de búsqueda a los datos
+  const publicadoPosts = posts.filter((post) => post.estado === "publicado");
 
-    return publicadoPosts.map((post) => {
-      return (
-        <Post
-          post={post}
-          deleteRecord={() => deleteRecord(post._id)}
-          updatePost={updatePost} 
-          key={post._id}
-        />
-      );
-    });
-  }
-
+ 
   // This following section will display the table with the records of individuals.
   return (
-    <div>
-      <h3 style={{ color: 'white' }}>Blog</h3>
-      <button className="btn btn-outline-primary" style={{ color: "white", marginBottom: "10px" }} onClick={crearNuevoPost}>
+    <div  style={{ marginTop: '80px' }}>
+      <h3 style={{ color: 'purple' }}>Blog Lovely</h3>
+      <button className="btn btn-primary" style={{ color: "white", marginBottom: "10px" }} onClick={crearNuevoPost}>
         Crear Post
       </button>
-      <table className="table table-striped" style={{ marginTop: 20 }}>
-        <thead>
-          <tr>
-            <th style={{ color: "black" }}>Titulo</th>
-            <th style={{ color: "black" }}>Imagen</th>
-            <th style={{ color: "black" }}>Contenido</th>
-            <th style={{ color: "black" }}>Etiquetas</th>
-            <th style={{ color: "black" }}>Estado</th>
-            <th style={{ color: "black" }}>Autor</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>{postList()}</tbody>
-      </table>
+      <TextField
+        id="filter-input"
+        label="Buscar"
+        variant="outlined"
+        size="small"
+        value={filterText}
+        onChange={handleFilter}
+        style={{ marginBottom: "10px" , color: "white"}}
+      />
+      <DataTable
+        columns={columns}
+        data={publicadoPosts}
+        pagination // Activa la paginación
+        striped // Alterna el fondo de las filas para mejorar la legibilidad
+        highlightOnHover // Resalta la fila cuando el usuario coloca el cursor sobre ella
+        pointerOnHover // Cambia el cursor cuando el usuario coloca el cursor sobre una fila
+        defaultSortField="titulo" // Campo predeterminado para ordenar
+        defaultSortAsc={true} // Orden ascendente por defecto
+        paginationPerPage={10} // Cantidad de elementos por página
+        noHeader // Oculta el encabezado de la tabla
+        noDataComponent="No hay datos disponibles" // Mensaje cuando no hay datos
+        responsive // Hace que la tabla sea responsive
+        searchable
+      />
+      
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import PostList from "./components/postList";
 import Edit from "./components/edit";
+import Details from "./components/details";
 import Create from "./components/create";
 import MyPost from "./components/myPost";
 import Footer from './components/Footer';
@@ -43,7 +44,8 @@ function App() {
               </>
           } />
           <Route path="/postList" element={<PostList />} />
-          <Route path="/edit/:id" element={<Edit />} />            
+          <Route path="/edit/:id" element={<Edit />} />
+          <Route path="/details/:id" element={<Details />} />              
           <Route path="/create" element={<Create />} /> 
           <Route path="/myPost" element={<MyPost />} /> 
       </Routes>  
