@@ -182,9 +182,9 @@ const eliminarPost = async (id) => {
  
   // This following section will display the table with the records of individuals.
   return (
-    <div>
-      <h3 style={{ color: 'white' }}>Mis Publicaciones</h3>
-      <button className="btn btn-outline-primary" style={{ color: "white", marginBottom: "10px" }} onClick={crearNuevoPost}>
+    <div  style={{ marginTop: '80px' }}>
+      <h3 style={{ color: 'purple' }}>Mis Publicaciones</h3>
+      <button className="btn btn-primary" style={{ color: "white", marginBottom: "10px" }} onClick={crearNuevoPost}>
         Crear Post
       </button>
       <TextField

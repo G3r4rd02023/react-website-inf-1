@@ -150,7 +150,8 @@
         top: 0;
         left: 0;
         width: 100%;
-        z-index: 9999;
+        background-color: #ba55ab;
+        z-index: 100;
         /* Agrega otros estilos según tus necesidades */
       }
         

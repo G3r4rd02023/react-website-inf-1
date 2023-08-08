@@ -97,11 +97,11 @@ export default function Edit() {
  
  // This following section will display the form that takes input from the user to update the data.
  return (
-   <div>
+   <div  style={{ marginTop: '80px' }}>
      <h3 style={{ color: 'white' }}>Actualizar Post</h3>
      <form onSubmit={onSubmit}>
        <div className="form-group">
-         <label htmlFor="titulo" style={{ color: 'white' }}>Titulo: </label>
+         <label htmlFor="titulo" style={{ color: 'purple' }}>Titulo: </label>
          <input
            type="text"
            className="form-control"
@@ -111,7 +111,7 @@ export default function Edit() {
          />
        </div>
        <div className="form-group">
-         <label htmlFor="image" style={{ color: 'white' }}>Imagen: </label>
+         <label htmlFor="image" style={{ color: 'purple' }}>Imagen: </label>
          <input
            type="text"
            className="form-control"
@@ -121,7 +121,7 @@ export default function Edit() {
          />      
        </div>
        <div className="form-group">
-          <label htmlFor="contenido" style={{ color: 'white' }}>Contenido</label>
+          <label htmlFor="contenido" style={{ color: 'purple' }}>Contenido</label>
           <ReactQuill
             value={form.contenido} // Usar form.contenido en lugar de contenido
             onChange={(value) => updateForm({ contenido: value })} // Usar updateForm para actualizar contenido
@@ -130,7 +130,7 @@ export default function Edit() {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="tags" style={{ color: 'white' }}>Etiquetas</label>
+          <label htmlFor="tags" style={{ color: 'purple' }}>Etiquetas</label>
           <input
             type="text"
             className="form-control"
@@ -140,7 +140,7 @@ export default function Edit() {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="estado" style={{ color: 'white' }}>Estado</label>
+          <label htmlFor="estado" style={{ color: 'purple' }}>Estado</label>
           <input
             type="text"
             className="form-control"
@@ -151,7 +151,7 @@ export default function Edit() {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="autor" style={{ color: 'white' }}>Autor</label>
+          <label htmlFor="autor" style={{ color: 'purple' }}>Autor</label>
           <input
             type="text"
             className="form-control"
